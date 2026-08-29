@@ -3,600 +3,1282 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Compilux: Terminal Hell</title>
+<title>OUTPOST 404</title>
+
 <style>
 * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
 }
+
 body {
     margin: 0;
-    background: #080a0f;
-    color: #dce3ea;
+    background: #080b10;
+    color: #e1e7ed;
     font-family: monospace;
 }
+
 main {
-    max-width: 720px;
+    max-width: 760px;
     margin: auto;
-    padding: 14px;
+    padding: 12px;
 }
+
 h1 {
-    margin: 4px 0;
-    font-size: 22px;
+    margin: 3px 0;
+    font-size: 24px;
 }
-.sub {
-    color: #788493;
-    font-size: 11px;
+
+.subtitle {
+    color: #778391;
+    font-size: 10px;
     margin-bottom: 10px;
 }
+
 .stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
+    gap: 6px;
 }
+
 .stat {
-    background: #11151c;
-    border: 1px solid #29313b;
-    border-radius: 10px;
-    padding: 9px;
-}
-.stat b {
-    display: block;
-    font-size: 17px;
-}
-.stat span {
-    font-size: 10px;
-    color: #84909e;
-}
-#terminal {
-    height: 330px;
-    margin-top: 9px;
-    padding: 10px;
-    background: #030507;
-    border: 1px solid #29313b;
-    border-radius: 10px;
-    overflow-y: auto;
-    font-size: 12px;
-    line-height: 1.45;
-}
-.buttons,
-.upgrades {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-    margin-top: 9px;
-}
-button {
-    width: 100%;
-    padding: 13px 7px;
-    border-radius: 10px;
-    border: 1px solid #303946;
-    background: #151b24;
-    color: #e6edf5;
-    font-family: monospace;
-    font-size: 12px;
-    touch-action: manipulation;
-    user-select: none;
-    cursor: pointer;
-}
-button:active {
-    transform: scale(.97);
-    background: #202a35;
-}
-.card {
-    background: #11151c;
-    border: 1px solid #29313b;
-    border-radius: 10px;
-    padding: 9px;
-}
-.card b {
-    font-size: 12px;
-}
-.card div {
-    margin: 4px 0;
-    font-size: 10px;
-    color: #84909e;
-}
-.small {
+    background: #111720;
+    border: 1px solid #293340;
+    border-radius: 9px;
     padding: 8px;
 }
+
+.stat b {
+    display: block;
+    font-size: 16px;
+}
+
+.stat span {
+    color: #84909e;
+    font-size: 9px;
+}
+
+.panel {
+    margin-top: 8px;
+    background: #111720;
+    border: 1px solid #293340;
+    border-radius: 10px;
+    padding: 9px;
+}
+
+#map {
+    margin-top: 8px;
+    background: #070a0e;
+    border: 1px solid #293340;
+    border-radius: 10px;
+    padding: 8px;
+
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 5px;
+}
+
+.cell {
+    aspect-ratio: 1;
+    background: #111820;
+    border: 1px solid #27313c;
+    border-radius: 7px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 23px;
+}
+
+#log {
+    height: 190px;
+    overflow-y: auto;
+
+    background: #05070a;
+    border-radius: 7px;
+
+    padding: 8px;
+
+    font-size: 11px;
+    line-height: 1.45;
+}
+
 .ok {
     color: #9de39b;
 }
-.err {
+
+.bad {
     color: #ff8585;
 }
+
 .warn {
-    color: #f1d279;
+    color: #f0d47c;
 }
+
+.buttons,
+.buildings {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+
+    margin-top: 8px;
+}
+
+button {
+    width: 100%;
+
+    padding: 12px 6px;
+
+    border: 1px solid #303b48;
+    border-radius: 8px;
+
+    background: #161e28;
+    color: #e6edf4;
+
+    font-family: monospace;
+    font-size: 11px;
+
+    touch-action: manipulation;
+    user-select: none;
+}
+
+button:active {
+    transform: scale(.97);
+    background: #202b37;
+}
+
+.card {
+    background: #0d131a;
+    border: 1px solid #293340;
+    border-radius: 8px;
+
+    padding: 8px;
+}
+
+.card b {
+    font-size: 11px;
+}
+
+.card p {
+    color: #84909e;
+    font-size: 9px;
+    margin: 4px 0;
+}
+
+.card button {
+    padding: 8px;
+}
+
 footer {
     display: flex;
     justify-content: space-between;
-    color: #687482;
-    font-size: 10px;
+
+    color: #65717f;
+    font-size: 9px;
+
     margin-top: 8px;
 }
 </style>
 </head>
+
+
 <body>
+
 <main>
-<h1>Compilux: Terminal Hell</h1>
-<div class="sub">
-zbuduj system. napraw zależności. nie ufaj ninja.
+
+<h1>OUTPOST 404</h1>
+
+<div class="subtitle">
+SURVIVAL // EXPANSION // SOMETHING IS DEFINITELY MOVING OUTSIDE
 </div>
+
+
 <div class="stats">
+
 <div class="stat">
-<b id="cpu">4</b>
-<span>CPU threads</span>
+<b id="day">1</b>
+<span>DAY</span>
 </div>
+
 <div class="stat">
-<b id="ram">512</b>
-<span>RAM MiB</span>
+<b id="energy">70</b>
+<span>ENERGY</span>
 </div>
+
 <div class="stat">
-<b id="packages">0</b>
-<span>packages</span>
+<b id="metal">35</b>
+<span>METAL</span>
 </div>
+
+<div class="stat">
+<b id="food">40</b>
+<span>FOOD</span>
 </div>
-<div id="terminal"></div>
+
+<div class="stat">
+<b id="crew">5</b>
+<span>CREW</span>
+</div>
+
+<div class="stat">
+<b id="morale">80</b>
+<span>MORALE</span>
+</div>
+
+</div>
+
+
+<div id="map"></div>
+
+
+<div class="panel">
+
+<div id="log"></div>
+
+
 <div class="buttons">
-<button id="build">
-▶ KOMPILUJ PAKIET
+
+<button id="nextDay">
+☀️ NASTĘPNY DZIEŃ
 </button>
-<button id="fix">
-🔧 NAPRAW BŁĄD
+
+<button id="expedition">
+🛰️ EKSPEDYCJA
 </button>
-<button id="clean">
-🧹 CLEAN BUILD
+
+<button id="research">
+🧪 BADANIA
 </button>
-<button id="boot">
-🚀 BOOTUJ COMPILUX
+
+<button id="repair">
+🔧 NAPRAWA
 </button>
+
 </div>
-<div class="upgrades">
+
+</div>
+
+
+<div class="panel">
+
+<b>BUILD</b>
+
+<div class="buildings">
+
+
 <div class="card">
-<b>CPU upgrade</b>
-<div>
-Podwaja wątki.
-Koszt:
-<span id="cpuCost">10</span> pkg
-</div>
-<button class="small" id="cpuUpgrade">
-KUP
+
+<b>🔋 Solar Array</b>
+
+<p>
++12 energii / dzień<br>
+Koszt: 15 metalu
+</p>
+
+<button id="solar">
+BUDUJ
 </button>
+
 </div>
+
+
 <div class="card">
-<b>RAM upgrade</b>
-<div>
-+256 MiB.
-Koszt:
-<span id="ramCost">8</span> pkg
-</div>
-<button class="small" id="ramUpgrade">
-KUP
+
+<b>⛏️ Mine</b>
+
+<p>
++10 metalu / dzień<br>
+Koszt: 20 metalu
+</p>
+
+<button id="mine">
+BUDUJ
 </button>
+
 </div>
+
+
 <div class="card">
-<b>ccache</b>
-<div>
-Większa szansa na szybki build.
-</div>
-<button class="small" id="cache">
-KUP ZA 25 PKG
+
+<b>🌱 Hydroponics</b>
+
+<p>
++12 jedzenia / dzień<br>
+Koszt: 18 metalu
+</p>
+
+<button id="farm">
+BUDUJ
 </button>
+
 </div>
+
+
 <div class="card">
-<b>☢️ NIE DOTYKAJ</b>
-<div>
-Losowy efekt.
-Oczywiście dotkniesz.
-</div>
-<button class="small" id="touch">
-DOTKNIJ
+
+<b>📡 Radar</b>
+
+<p>
+Bezpieczniejsze ekspedycje<br>
+Koszt: 25 metalu
+</p>
+
+<button id="radar">
+BUDUJ
 </button>
+
 </div>
+
+
+<div class="card">
+
+<b>🧪 Laboratory</b>
+
+<p>
++2 research / dzień<br>
+Koszt: 30 metalu
+</p>
+
+<button id="lab">
+BUDUJ
+</button>
+
 </div>
+
+
+<div class="card">
+
+<b>🛡️ Defense</b>
+
+<p>
+Chroni przed wydarzeniami<br>
+Koszt: 35 metalu
+</p>
+
+<button id="defense">
+BUDUJ
+</button>
+
+</div>
+
+
+</div>
+
+</div>
+
+
 <footer>
-<span>save: localStorage ✓</span>
+
 <span id="status">
-system: niegotowy
+BASE ONLINE
 </span>
+
+<span>
+autosave ✓
+</span>
+
 </footer>
+
 </main>
+
+
 <script>
+
 "use strict";
+
+
 /* =========================
-   SAVE
+   GAME STATE
 ========================= */
+
+const defaultGame = {
+
+    day: 1,
+
+    energy: 70,
+
+    metal: 35,
+
+    food: 40,
+
+    crew: 5,
+
+    morale: 80,
+
+    research: 0,
+
+    solar: 0,
+
+    mine: 0,
+
+    farm: 0,
+
+    radar: 0,
+
+    lab: 0,
+
+    defense: 0,
+
+    dead: false
+
+};
+
+
 let game;
+
+
 try {
-    game = JSON.parse(
-        localStorage.getItem("compiluxSave")
-    );
+
+    game =
+        JSON.parse(
+            localStorage.getItem("outpost404")
+        ) || defaultGame;
+
 } catch {
-    game = null;
+
+    game = defaultGame;
+
 }
-if (!game) {
-    game = {
-        cpu: 4,
-        ram: 512,
-        packages: 0,
-        errors: 0,
-        built: 0,
-        cache: false,
-        booted: false
-    };
-}
+
+
 /* =========================
    HELPERS
 ========================= */
-const $ = id =>
-    document.getElementById(id);
-const terminal =
-    $("terminal");
+
+function $(id) {
+
+    return document.getElementById(id);
+
+}
+
+
 function save() {
+
     localStorage.setItem(
-        "compiluxSave",
+        "outpost404",
         JSON.stringify(game)
     );
+
     updateUI();
+
 }
+
+
 function log(text, type = "") {
+
     const line =
         document.createElement("div");
+
     line.textContent = text;
-    if (type)
+
+    if (type) {
+
         line.className = type;
-    terminal.appendChild(line);
-    terminal.scrollTop =
-        terminal.scrollHeight;
+
+    }
+
+    $("log").appendChild(line);
+
+    $("log").scrollTop =
+        $("log").scrollHeight;
+
 }
+
+
 function random(array) {
+
     return array[
         Math.floor(
             Math.random() * array.length
         )
     ];
+
 }
+
+
 /* =========================
    UI
 ========================= */
+
 function updateUI() {
-    $("cpu").textContent =
-        game.cpu;
-    $("ram").textContent =
-        game.ram;
-    $("packages").textContent =
-        game.packages;
-    $("cpuCost").textContent =
-        game.cpu < 64
-            ? Math.floor(game.cpu * 2.5)
-            : "MAX";
-    $("ramCost").textContent =
-        Math.floor(game.ram / 64);
-    $("cache").textContent =
-        game.cache
-            ? "✓ CCACHE AKTYWNY"
-            : "KUP ZA 25 PKG";
+
+    $("day").textContent =
+        game.day;
+
+    $("energy").textContent =
+        game.energy;
+
+    $("metal").textContent =
+        game.metal;
+
+    $("food").textContent =
+        game.food;
+
+    $("crew").textContent =
+        game.crew;
+
+    $("morale").textContent =
+        game.morale;
+
+
     $("status").textContent =
-        game.booted
-            ? "system: BOOTED 🔥"
-            : "system: niegotowy";
+        game.dead
+            ? "BASE LOST 💀"
+            : "BASE ONLINE";
+
+
+    drawMap();
+
 }
+
+
+/* =========================
+   MAP
+========================= */
+
+function drawMap() {
+
+    const map = $("map");
+
+    map.innerHTML = "";
+
+
+    const tiles = [
+
+        "🏠",
+        game.solar ? "🔋" : "·",
+        game.mine ? "⛏️" : "·",
+        game.farm ? "🌱" : "·",
+        game.radar ? "📡" : "·",
+
+        game.lab ? "🧪" : "·",
+        game.defense ? "🛡️" : "·",
+        "🌲",
+        "🌲",
+        "☢️",
+
+        "🪨",
+        "🪨",
+        "🌲",
+        "·",
+        "·"
+
+    ];
+
+
+    tiles.forEach(tile => {
+
+        const cell =
+            document.createElement("div");
+
+        cell.className = "cell";
+
+        cell.textContent = tile;
+
+        map.appendChild(cell);
+
+    });
+
+}
+
+
 /* =========================
    BUILD
 ========================= */
-function buildPackage() {
+
+function build(type, cost, name) {
+
+    if (game.dead)
+        return;
+
+
+    if (game.metal < cost) {
+
+        log(
+            "[BUILD] Brakuje metalu.",
+            "bad"
+        );
+
+        return;
+
+    }
+
+
+    game.metal -= cost;
+
+    game[type]++;
+
+
     log(
-        "[build] resolving dependencies..."
+        "[BUILD] " +
+        name +
+        " ukończony.",
+        "ok"
     );
-    setTimeout(() => {
-        let chance =
-            0.38 +
-            game.cpu * 0.01 +
-            (game.cache ? 0.18 : 0);
-        chance =
-            Math.min(chance, 0.82);
-        if (Math.random() < chance) {
-            game.packages++;
-            game.built++;
-            log(
-                "[ OK ] " +
-                random([
-                    "gcc",
-                    "glibc",
-                    "bash",
-                    "meson",
-                    "wayland",
-                    "ncurses",
-                    "coreutils"
-                ]) +
-                " compiled successfully",
-                "ok"
+
+
+    save();
+
+}
+
+
+/* =========================
+   NEXT DAY
+========================= */
+
+function nextDay() {
+
+    if (game.dead)
+        return;
+
+
+    game.day++;
+
+
+    /* production */
+
+    game.energy +=
+        game.solar * 12;
+
+    game.metal +=
+        game.mine * 10;
+
+    game.food +=
+        game.farm * 12;
+
+
+    /* consumption */
+
+    game.energy -= 10;
+
+    game.food -=
+        game.crew * 2;
+
+
+    game.research +=
+        game.lab * 2;
+
+
+    /* power failure */
+
+    if (game.energy < 0) {
+
+        game.energy = 0;
+
+        game.morale -= 12;
+
+        game.crew =
+            Math.max(
+                0,
+                game.crew - 1
             );
-        }
-        else {
-            game.errors++;
-            log(
-                "[ERROR] " +
-                random([
-                    "undefined reference",
-                    "dependency not found",
-                    "configure: failed",
-                    "meson: ninja failed",
-                    "cannot find -lfoo"
-                ]),
-                "err"
+
+
+        log(
+            "[CRITICAL] Awaria zasilania. Stracono członka załogi.",
+            "bad"
+        );
+
+    }
+
+
+    /* food shortage */
+
+    if (game.food < 0) {
+
+        game.food = 0;
+
+        game.morale -= 15;
+
+        game.crew =
+            Math.max(
+                0,
+                game.crew - 1
             );
+
+
+        log(
+            "[CRITICAL] Brak jedzenia.",
+            "bad"
+        );
+
+    }
+
+
+    /* =====================
+       RANDOM EVENTS
+    ===================== */
+
+    const event =
+        Math.random();
+
+
+    if (event < 0.20) {
+
+        const damage =
+            Math.max(
+                0,
+                Math.ceil(
+                    Math.random() * 25
+                ) -
+                game.defense * 8
+            );
+
+
+        if (damage > 0) {
+
+            game.energy =
+                Math.max(
+                    0,
+                    game.energy - damage
+                );
+
+            game.morale -= 5;
+
+
             log(
-                "[hint] przeczytaj log. tak, cały.",
+                "[EVENT] Burza elektromagnetyczna. -" +
+                damage +
+                " energii.",
                 "warn"
             );
+
+        } else {
+
+            log(
+                "[EVENT] Burza wykryta. Obrona zadziałała.",
+                "ok"
+            );
+
         }
-        save();
-    }, 180);
-}
-/* =========================
-   FIX
-========================= */
-function fixError() {
-    if (game.errors <= 0) {
-        log(
-            "[fix] no errors. co ty naprawiasz?",
-            "warn"
-        );
-        return;
+
     }
-    game.errors--;
-    log(
-        "[fix] applying questionable fix..."
-    );
-    setTimeout(() => {
+
+
+    else if (event < 0.37) {
+
+        const amount =
+            8 +
+            Math.floor(
+                Math.random() * 20
+            );
+
+
+        game.metal += amount;
+
+
         log(
-            "[ OK ] somehow fixed",
+            "[EVENT] Znaleziono fragmenty meteorytu. +" +
+            amount +
+            " metalu.",
             "ok"
         );
-        save();
-    }, 180);
-}
-/* =========================
-   CLEAN
-========================= */
-function cleanBuild() {
-    game.packages =
+
+    }
+
+
+    else if (event < 0.52) {
+
+        if (game.radar > 0) {
+
+            game.morale =
+                Math.min(
+                    100,
+                    game.morale + 5
+                );
+
+
+            log(
+                "[EVENT] Radar wykrył ruch. Dostajesz czas na reakcję.",
+                "ok"
+            );
+
+        } else {
+
+            game.morale -= 7;
+
+
+            log(
+                "[EVENT] Coś poruszało się za bazą. Nie masz radaru.",
+                "warn"
+            );
+
+        }
+
+    }
+
+
+    else if (event < 0.64) {
+
+        game.food =
+            Math.max(
+                0,
+                game.food - 10
+            );
+
+
+        log(
+            "[EVENT] Choroba roślin. -10 jedzenia.",
+            "bad"
+        );
+
+    }
+
+
+    else if (event < 0.76) {
+
+        game.morale =
+            Math.min(
+                100,
+                game.morale + 8
+            );
+
+
+        log(
+            "[EVENT] Załoga znalazła stare filmy. Morale +8.",
+            "ok"
+        );
+
+    }
+
+
+    /* clamp */
+
+    game.morale =
         Math.max(
             0,
-            game.packages - 1
+            Math.min(
+                100,
+                game.morale
+            )
         );
-    log(
-        "[clean] rm -rf build/"
-    );
-    setTimeout(() => {
-        log(
-            "[clean] done. pewnie było potrzebne.",
-            "warn"
-        );
-        save();
-    }, 140);
-}
-/* =========================
-   BOOT
-========================= */
-function bootCompilux() {
-    log(
-        "[boot] loading kernel..."
-    );
-    setTimeout(() => {
-        if (
-            game.packages >= 18 &&
-            game.errors <= 1
-        ) {
-            game.booted = true;
-            log(
-                "[ OK ] mounting /",
-                "ok"
-            );
-            log(
-                "[ OK ] starting init",
-                "ok"
-            );
-            log(
-                "COMPILUX LINUX IS ALIVE 🔥",
-                "ok"
-            );
-        }
-        else {
-            log(
-                "[FAIL] boot failed",
-                "err"
-            );
-            if (game.packages < 18) {
-                log(
-                    "[FAIL] packages: " +
-                    game.packages +
-                    "/18",
-                    "err"
-                );
-            }
-            if (game.errors > 1) {
-                log(
-                    "[FAIL] unresolved errors: " +
-                    game.errors,
-                    "err"
-                );
-            }
-        }
-        save();
-    }, 280);
-}
-/* =========================
-   CPU
-========================= */
-function upgradeCPU() {
-    const cost =
-        game.cpu < 64
-            ? Math.floor(game.cpu * 2.5)
-            : Infinity;
+
+
+    /* game over */
+
     if (
-        game.packages >= cost &&
-        game.cpu < 64
+        game.morale <= 0 ||
+        game.crew <= 0
     ) {
-        game.packages -= cost;
-        game.cpu *= 2;
+
+        game.dead = true;
+
+
         log(
-            "[upgrade] CPU threads doubled.",
+            "[GAME OVER] Outpost 404 upadł.",
+            "bad"
+        );
+
+    }
+
+
+    /* victory */
+
+    if (game.day >= 50 && !game.dead) {
+
+        game.dead = true;
+
+
+        log(
+            "[VICTORY] Dzień 50. Statek ratunkowy dotarł. 🔥",
             "ok"
         );
-        save();
+
     }
-    else {
-        log(
-            "[upgrade] insufficient packages.",
-            "err"
-        );
-    }
+
+
+    save();
+
 }
+
+
 /* =========================
-   RAM
+   EXPEDITION
 ========================= */
-function upgradeRAM() {
-    const cost =
-        Math.floor(game.ram / 64);
-    if (game.packages >= cost) {
-        game.packages -= cost;
-        game.ram += 256;
+
+function expedition() {
+
+    if (game.dead)
+        return;
+
+
+    const cost = 8;
+
+
+    if (game.energy < cost) {
+
         log(
-            "[upgrade] +256 MiB RAM",
+            "[EXPEDITION] Za mało energii.",
+            "bad"
+        );
+
+        return;
+
+    }
+
+
+    game.energy -= cost;
+
+
+    const successChance =
+        game.radar > 0
+            ? 0.72
+            : 0.48;
+
+
+    if (
+        Math.random() <
+        successChance
+    ) {
+
+        const metal =
+            10 +
+            Math.floor(
+                Math.random() * 25
+            );
+
+
+        const food =
+            5 +
+            Math.floor(
+                Math.random() * 18
+            );
+
+
+        game.metal += metal;
+
+        game.food += food;
+
+
+        log(
+            "[EXPEDITION] Powrót bezpieczny. +" +
+            metal +
+            " metalu, +" +
+            food +
+            " jedzenia.",
             "ok"
         );
-        save();
+
+
+        if (
+            Math.random() < 0.25
+        ) {
+
+            game.research += 5;
+
+
+            log(
+                "[EXPEDITION] Odnaleziono starą technologię. +5 research.",
+                "ok"
+            );
+
+        }
+
     }
+
+
     else {
+
+        game.crew =
+            Math.max(
+                0,
+                game.crew - 1
+            );
+
+
+        game.morale -= 10;
+
+
         log(
-            "[upgrade] insufficient packages.",
-            "err"
+            "[EXPEDITION] Kontakt utracony. Jeden członek załogi zaginął.",
+            "bad"
         );
+
     }
+
+
+    save();
+
 }
+
+
 /* =========================
-   CCACHE
+   RESEARCH
 ========================= */
-function buyCache() {
-    if (game.cache) {
+
+function research() {
+
+    if (game.dead)
+        return;
+
+
+    const cost = 10;
+
+
+    if (game.research < cost) {
+
         log(
-            "[upgrade] already installed.",
+            "[LAB] Potrzebujesz " +
+            cost +
+            " research.",
             "warn"
         );
+
         return;
+
     }
-    if (game.packages >= 25) {
-        game.packages -= 25;
-        game.cache = true;
-        log(
-            "[upgrade] ccache installed.",
-            "ok"
+
+
+    game.research -= cost;
+
+
+    const technologies = [
+
+        "efficient solar",
+
+        "automated mining",
+
+        "synthetic food",
+
+        "long-range sensors"
+
+    ];
+
+
+    const tech =
+        random(
+            technologies
         );
-        save();
+
+
+    if (
+        tech ===
+        "efficient solar"
+    ) {
+
+        game.solar++;
+
     }
-    else {
-        log(
-            "[upgrade] insufficient packages.",
-            "err"
-        );
+
+
+    if (
+        tech ===
+        "automated mining"
+    ) {
+
+        game.mine++;
+
     }
-}
-/* =========================
-   DON'T TOUCH
-========================= */
-function touchButton() {
-    const chance =
-        Math.random();
-    if (chance < 0.4) {
-        game.packages += 3;
-        log(
-            "[???] mysterious binary found. +3 packages",
-            "ok"
-        );
+
+
+    if (
+        tech ===
+        "synthetic food"
+    ) {
+
+        game.farm++;
+
     }
-    else if (chance < 0.78) {
-        game.errors += 2;
-        log(
-            "[???] YOU TOUCHED IT.",
-            "err"
-        );
+
+
+    if (
+        tech ===
+        "long-range sensors"
+    ) {
+
+        game.radar++;
+
     }
-    else {
-        game.cpu =
-            Math.max(
-                1,
-                Math.floor(
-                    game.cpu / 2
-                )
-            );
-        log(
-            "[???] ninja noticed you.",
-            "err"
-        );
-    }
+
+
+    log(
+        "[RESEARCH] Odblokowano: " +
+        tech +
+        ".",
+        "ok"
+    );
+
+
     save();
+
 }
+
+
+/* =========================
+   REPAIR
+========================= */
+
+function repair() {
+
+    if (game.dead)
+        return;
+
+
+    if (game.metal < 10) {
+
+        log(
+            "[REPAIR] Potrzebujesz 10 metalu.",
+            "bad"
+        );
+
+        return;
+
+    }
+
+
+    game.metal -= 10;
+
+
+    game.energy =
+        Math.min(
+            100,
+            game.energy + 5
+        );
+
+
+    game.morale =
+        Math.min(
+            100,
+            game.morale + 8
+        );
+
+
+    log(
+        "[REPAIR] Systemy ustabilizowane.",
+        "ok"
+    );
+
+
+    save();
+
+}
+
+
 /* =========================
    BUTTONS
 ========================= */
-$("build")
+
+$("nextDay")
     .addEventListener(
         "click",
-        buildPackage
+        nextDay
     );
-$("fix")
+
+
+$("expedition")
     .addEventListener(
         "click",
-        fixError
+        expedition
     );
-$("clean")
+
+
+$("research")
     .addEventListener(
         "click",
-        cleanBuild
+        research
     );
-$("boot")
+
+
+$("repair")
     .addEventListener(
         "click",
-        bootCompilux
+        repair
     );
-$("cpuUpgrade")
+
+
+$("solar")
     .addEventListener(
         "click",
-        upgradeCPU
+        () =>
+            build(
+                "solar",
+                15,
+                "Solar Array"
+            )
     );
-$("ramUpgrade")
+
+
+$("mine")
     .addEventListener(
         "click",
-        upgradeRAM
+        () =>
+            build(
+                "mine",
+                20,
+                "Mine"
+            )
     );
-$("cache")
+
+
+$("farm")
     .addEventListener(
         "click",
-        buyCache
+        () =>
+            build(
+                "farm",
+                18,
+                "Hydroponics"
+            )
     );
-$("touch")
+
+
+$("radar")
     .addEventListener(
         "click",
-        touchButton
+        () =>
+            build(
+                "radar",
+                25,
+                "Radar"
+            )
     );
+
+
+$("lab")
+    .addEventListener(
+        "click",
+        () =>
+            build(
+                "lab",
+                30,
+                "Laboratory"
+            )
+    );
+
+
+$("defense")
+    .addEventListener(
+        "click",
+        () =>
+            build(
+                "defense",
+                35,
+                "Defense"
+            )
+    );
+
+
 /* =========================
    START
 ========================= */
+
 log(
-    "Compilux build environment initialized."
-);
-log(
-    "root:/mnt/compilux# ./start"
-);
-log(
-    "Welcome back, engineer.",
+    "OUTPOST 404 // BOOT SEQUENCE COMPLETE.",
     "ok"
 );
+
+log(
+    "You are 4.2 billion km from anyone who can fix this."
+);
+
+log(
+    "OBJECTIVE: SURVIVE 50 DAYS."
+);
+
 updateUI();
+
 </script>
+
 </body>
 </html>
