@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Compilux: Terminal Hell</title>
+<style>
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+body {
+    margin: 0;
+    background: #080a0f;
+    color: #dce3ea;
+    font-family: monospace;
+}
+main {
+    max-width: 720px;
+    margin: auto;
+    padding: 14px;
+}
+h1 {
+    margin: 4px 0;
+    font-size: 22px;
+}
+.sub {
+    color: #788493;
+    font-size: 11px;
+    margin-bottom: 10px;
+}
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+.stat {
+    background: #11151c;
+    border: 1px solid #29313b;
+    border-radius: 10px;
+    padding: 9px;
+}
+.stat b {
+    display: block;
+    font-size: 17px;
+}
+.stat span {
+    font-size: 10px;
+    color: #84909e;
+}
+#terminal {
+    height: 330px;
+    margin-top: 9px;
+    padding: 10px;
+    background: #030507;
+    border: 1px solid #29313b;
+    border-radius: 10px;
+    overflow-y: auto;
+    font-size: 12px;
+    line-height: 1.45;
+}
+.buttons,
+.upgrades {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-top: 9px;
+}
+button {
+    width: 100%;
+    padding: 13px 7px;
+    border-radius: 10px;
+    border: 1px solid #303946;
+    background: #151b24;
+    color: #e6edf5;
+    font-family: monospace;
+    font-size: 12px;
+    touch-action: manipulation;
+    user-select: none;
+    cursor: pointer;
+}
+button:active {
+    transform: scale(.97);
+    background: #202a35;
+}
+.card {
+    background: #11151c;
+    border: 1px solid #29313b;
+    border-radius: 10px;
+    padding: 9px;
+}
+.card b {
+    font-size: 12px;
+}
+.card div {
+    margin: 4px 0;
+    font-size: 10px;
+    color: #84909e;
+}
+.small {
+    padding: 8px;
+}
+.ok {
+    color: #9de39b;
+}
+.err {
+    color: #ff8585;
+}
+.warn {
+    color: #f1d279;
+}
+footer {
+    display: flex;
+    justify-content: space-between;
+    color: #687482;
+    font-size: 10px;
+    margin-top: 8px;
+}
+</style>
+</head>
+<body>
+<main>
+<h1>Compilux: Terminal Hell</h1>
+<div class="sub">
+zbuduj system. napraw zależności. nie ufaj ninja.
+</div>
+<div class="stats">
+<div class="stat">
+<b id="cpu">4</b>
+<span>CPU threads</span>
+</div>
+<div class="stat">
+<b id="ram">512</b>
+<span>RAM MiB</span>
+</div>
+<div class="stat">
+<b id="packages">0</b>
+<span>packages</span>
+</div>
+</div>
+<div id="terminal"></div>
+<div class="buttons">
+<button id="build">
+▶ KOMPILUJ PAKIET
+</button>
+<button id="fix">
+🔧 NAPRAW BŁĄD
+</button>
+<button id="clean">
+🧹 CLEAN BUILD
+</button>
+<button id="boot">
+🚀 BOOTUJ COMPILUX
+</button>
+</div>
+<div class="upgrades">
+<div class="card">
+<b>CPU upgrade</b>
+<div>
+Podwaja wątki.
+Koszt:
+<span id="cpuCost">10</span> pkg
+</div>
+<button class="small" id="cpuUpgrade">
+KUP
+</button>
+</div>
+<div class="card">
+<b>RAM upgrade</b>
+<div>
++256 MiB.
+Koszt:
+<span id="ramCost">8</span> pkg
+</div>
+<button class="small" id="ramUpgrade">
+KUP
+</button>
+</div>
+<div class="card">
+<b>ccache</b>
+<div>
+Większa szansa na szybki build.
+</div>
+<button class="small" id="cache">
+KUP ZA 25 PKG
+</button>
+</div>
+<div class="card">
+<b>☢️ NIE DOTYKAJ</b>
+<div>
+Losowy efekt.
+Oczywiście dotkniesz.
+</div>
+<button class="small" id="touch">
+DOTKNIJ
+</button>
+</div>
+</div>
+<footer>
+<span>save: localStorage ✓</span>
+<span id="status">
+system: niegotowy
+</span>
+</footer>
+</main>
+<script>
+"use strict";
+/* =========================
+   SAVE
+========================= */
+let game;
+try {
+    game = JSON.parse(
+        localStorage.getItem("compiluxSave")
+    );
+} catch {
+    game = null;
+}
+if (!game) {
+    game = {
+        cpu: 4,
+        ram: 512,
+        packages: 0,
+        errors: 0,
+        built: 0,
+        cache: false,
+        booted: false
+    };
+}
+/* =========================
+   HELPERS
+========================= */
+const $ = id =>
+    document.getElementById(id);
+const terminal =
+    $("terminal");
+function save() {
+    localStorage.setItem(
+        "compiluxSave",
+        JSON.stringify(game)
+    );
+    updateUI();
+}
+function log(text, type = "") {
+    const line =
+        document.createElement("div");
+    line.textContent = text;
+    if (type)
+        line.className = type;
+    terminal.appendChild(line);
+    terminal.scrollTop =
+        terminal.scrollHeight;
+}
+function random(array) {
+    return array[
+        Math.floor(
+            Math.random() * array.length
+        )
+    ];
+}
+/* =========================
+   UI
+========================= */
+function updateUI() {
+    $("cpu").textContent =
+        game.cpu;
+    $("ram").textContent =
+        game.ram;
+    $("packages").textContent =
+        game.packages;
+    $("cpuCost").textContent =
+        game.cpu < 64
+            ? Math.floor(game.cpu * 2.5)
+            : "MAX";
+    $("ramCost").textContent =
+        Math.floor(game.ram / 64);
+    $("cache").textContent =
+        game.cache
+            ? "✓ CCACHE AKTYWNY"
+            : "KUP ZA 25 PKG";
+    $("status").textContent =
+        game.booted
+            ? "system: BOOTED 🔥"
+            : "system: niegotowy";
+}
+/* =========================
+   BUILD
+========================= */
+function buildPackage() {
+    log(
+        "[build] resolving dependencies..."
+    );
+    setTimeout(() => {
+        let chance =
+            0.38 +
+            game.cpu * 0.01 +
+            (game.cache ? 0.18 : 0);
+        chance =
+            Math.min(chance, 0.82);
+        if (Math.random() < chance) {
+            game.packages++;
+            game.built++;
+            log(
+                "[ OK ] " +
+                random([
+                    "gcc",
+                    "glibc",
+                    "bash",
+                    "meson",
+                    "wayland",
+                    "ncurses",
+                    "coreutils"
+                ]) +
+                " compiled successfully",
+                "ok"
+            );
+        }
+        else {
+            game.errors++;
+            log(
+                "[ERROR] " +
+                random([
+                    "undefined reference",
+                    "dependency not found",
+                    "configure: failed",
+                    "meson: ninja failed",
+                    "cannot find -lfoo"
+                ]),
+                "err"
+            );
+            log(
+                "[hint] przeczytaj log. tak, cały.",
+                "warn"
+            );
+        }
+        save();
+    }, 180);
+}
+/* =========================
+   FIX
+========================= */
+function fixError() {
+    if (game.errors <= 0) {
+        log(
+            "[fix] no errors. co ty naprawiasz?",
+            "warn"
+        );
+        return;
+    }
+    game.errors--;
+    log(
+        "[fix] applying questionable fix..."
+    );
+    setTimeout(() => {
+        log(
+            "[ OK ] somehow fixed",
+            "ok"
+        );
+        save();
+    }, 180);
+}
+/* =========================
+   CLEAN
+========================= */
+function cleanBuild() {
+    game.packages =
+        Math.max(
+            0,
+            game.packages - 1
+        );
+    log(
+        "[clean] rm -rf build/"
+    );
+    setTimeout(() => {
+        log(
+            "[clean] done. pewnie było potrzebne.",
+            "warn"
+        );
+        save();
+    }, 140);
+}
+/* =========================
+   BOOT
+========================= */
+function bootCompilux() {
+    log(
+        "[boot] loading kernel..."
+    );
+    setTimeout(() => {
+        if (
+            game.packages >= 18 &&
+            game.errors <= 1
+        ) {
+            game.booted = true;
+            log(
+                "[ OK ] mounting /",
+                "ok"
+            );
+            log(
+                "[ OK ] starting init",
+                "ok"
+            );
+            log(
+                "COMPILUX LINUX IS ALIVE 🔥",
+                "ok"
+            );
+        }
+        else {
+            log(
+                "[FAIL] boot failed",
+                "err"
+            );
+            if (game.packages < 18) {
+                log(
+                    "[FAIL] packages: " +
+                    game.packages +
+                    "/18",
+                    "err"
+                );
+            }
+            if (game.errors > 1) {
+                log(
+                    "[FAIL] unresolved errors: " +
+                    game.errors,
+                    "err"
+                );
+            }
+        }
+        save();
+    }, 280);
+}
+/* =========================
+   CPU
+========================= */
+function upgradeCPU() {
+    const cost =
+        game.cpu < 64
+            ? Math.floor(game.cpu * 2.5)
+            : Infinity;
+    if (
+        game.packages >= cost &&
+        game.cpu < 64
+    ) {
+        game.packages -= cost;
+        game.cpu *= 2;
+        log(
+            "[upgrade] CPU threads doubled.",
+            "ok"
+        );
+        save();
+    }
+    else {
+        log(
+            "[upgrade] insufficient packages.",
+            "err"
+        );
+    }
+}
+/* =========================
+   RAM
+========================= */
+function upgradeRAM() {
+    const cost =
+        Math.floor(game.ram / 64);
+    if (game.packages >= cost) {
+        game.packages -= cost;
+        game.ram += 256;
+        log(
+            "[upgrade] +256 MiB RAM",
+            "ok"
+        );
+        save();
+    }
+    else {
+        log(
+            "[upgrade] insufficient packages.",
+            "err"
+        );
+    }
+}
+/* =========================
+   CCACHE
+========================= */
+function buyCache() {
+    if (game.cache) {
+        log(
+            "[upgrade] already installed.",
+            "warn"
+        );
+        return;
+    }
+    if (game.packages >= 25) {
+        game.packages -= 25;
+        game.cache = true;
+        log(
+            "[upgrade] ccache installed.",
+            "ok"
+        );
+        save();
+    }
+    else {
+        log(
+            "[upgrade] insufficient packages.",
+            "err"
+        );
+    }
+}
+/* =========================
+   DON'T TOUCH
+========================= */
+function touchButton() {
+    const chance =
+        Math.random();
+    if (chance < 0.4) {
+        game.packages += 3;
+        log(
+            "[???] mysterious binary found. +3 packages",
+            "ok"
+        );
+    }
+    else if (chance < 0.78) {
+        game.errors += 2;
+        log(
+            "[???] YOU TOUCHED IT.",
+            "err"
+        );
+    }
+    else {
+        game.cpu =
+            Math.max(
+                1,
+                Math.floor(
+                    game.cpu / 2
+                )
+            );
+        log(
+            "[???] ninja noticed you.",
+            "err"
+        );
+    }
+    save();
+}
+/* =========================
+   BUTTONS
+========================= */
+$("build")
+    .addEventListener(
+        "click",
+        buildPackage
+    );
+$("fix")
+    .addEventListener(
+        "click",
+        fixError
+    );
+$("clean")
+    .addEventListener(
+        "click",
+        cleanBuild
+    );
+$("boot")
+    .addEventListener(
+        "click",
+        bootCompilux
+    );
+$("cpuUpgrade")
+    .addEventListener(
+        "click",
+        upgradeCPU
+    );
+$("ramUpgrade")
+    .addEventListener(
+        "click",
+        upgradeRAM
+    );
+$("cache")
+    .addEventListener(
+        "click",
+        buyCache
+    );
+$("touch")
+    .addEventListener(
+        "click",
+        touchButton
+    );
+/* =========================
+   START
+========================= */
+log(
+    "Compilux build environment initialized."
+);
+log(
+    "root:/mnt/compilux# ./start"
+);
+log(
+    "Welcome back, engineer.",
+    "ok"
+);
+updateUI();
+</script>
+</body>
+</html>
